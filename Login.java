@@ -1,5 +1,6 @@
 public class Login { // This class should handel log in procedures
     Database DB = new Database();
+    Manager session;
     public Login(){
     }
     public int registster(String usr, String psw){ // registration funct
