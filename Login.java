@@ -4,7 +4,7 @@ public class Login { // This class should handel log in procedures
     }
     public String registster(String usr, String psw, int acctype){ // registration funct
         Users temp = DB.find(usr);
-        if(temp == null){
+        if(temp != null){
             return "Error: username already taken";
         } else {
             DB.createUser(usr,psw,acctype);
@@ -13,8 +13,8 @@ public class Login { // This class should handel log in procedures
     }
     int GetID(String ID, String Password){ // check if user exists and has correct password
         Users temp = DB.find(ID);
-        if(temp.acctype != -1 && temp.Pass.equals(Password)){
-            return 1; // ID verified
+        if(temp != null && temp.Pass.equals(Password)){
+            return temp.acctype; // ID verified, return the account type, to be processed by the state classes
         } else {
             return 0; // wrong
         }
