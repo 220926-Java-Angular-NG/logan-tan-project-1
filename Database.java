@@ -12,6 +12,7 @@ public class Database {
     public void add(Users ad, Users loc) {
         if(root == null){
             root = ad;
+            return;
         } else {
             int cmp = ad.ID.compareTo(loc.ID);
             if(cmp == 0){
@@ -22,14 +23,15 @@ public class Database {
                     return;
                 }
                 loc = loc.chldL;
+                add(ad,loc); // recurse
             } else{
                 if(loc.chldR == null){ // base case
                     loc.chldR = ad;
                     return;
                 }
                 loc = loc.chldR;
+                add(ad,loc); // recurse
             }
-            add(ad,loc); // recurse
         }
     }
     public Users find(String username){
@@ -39,21 +41,19 @@ public class Database {
         return findhelper(username,root);
     }
     public Users findhelper(String usr, Users loc){
-        int cmp = loc.ID.compareTo(usr);
-        if(cmp == 0){
-            return loc;
-        } else if(cmp > 0){
-            if (loc.chldL == null){
-                return null;
-            }
-            loc = loc.chldL;
-        } else{
-            if (loc.chldR == null){
-                return null;
-            }
-            loc = loc.chldR;
+        if(loc == null){
+            return null; // base case
         }
-        return findhelper(usr, loc);
+        int cmp = usr.compareTo(loc.ID);
+        if(cmp == 0){
+            return loc; // base case
+        }
+        if(cmp > 0){
+            loc = loc.chldL; // update
+        } else{
+            loc = loc.chldR; // update
+        }
+        return findhelper(usr, loc); // recurse
     }
 
 }
