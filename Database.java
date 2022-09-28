@@ -1,7 +1,10 @@
+import jdk.jfr.Unsigned;
+
 public class Database {
     Users root = null;
     public Database() {
         //if there was a file to load initialize here
+
     }
 
     public void createUser(String UID, String Pass, int type) {
@@ -9,13 +12,14 @@ public class Database {
         add(temp, root);
     }
 
-    public void add(Users ad, Users loc) {
+    private void add(Users ad, Users loc) {
         if(root == null){
             root = ad;
             return;
         } else {
             int cmp = ad.ID.compareTo(loc.ID);
             if(cmp == 0){
+                System.err.println("You should not have read this");
                 return; // error case, due to this being a helper function this should never run
             } else if (cmp > 0) {
                 if(loc.chldL == null){ // base case
@@ -40,7 +44,7 @@ public class Database {
         }
         return findhelper(username,root);
     }
-    public Users findhelper(String usr, Users loc){
+    private Users findhelper(String usr, Users loc){
         if(loc == null){
             return null; // base case
         }

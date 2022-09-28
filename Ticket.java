@@ -10,10 +10,17 @@ public class Ticket {
         System.out.println("Amount: " + Reimburstment);
         System.out.println(Disc);
         switch (status) {
-            case 0 -> System.out.println("Pending");
-            case 1 -> System.out.println("Accepted");
-            case 2 -> System.out.println("Rejected");
-            default -> {}
+            case 0:
+                System.out.println("Pending");
+                break;
+            case 1:
+                System.out.println("Accepted");
+                break;
+            case 2:
+                System.out.println("Rejected");
+                break;
+            default:
+            {break;}
         }
     }
 }
