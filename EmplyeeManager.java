@@ -5,11 +5,13 @@ public class EmplyeeManager implements Manager {
     }
 
     public void ViewTickets() {
-
+        for(int i = 0; i < user.tickets.length; i++){
+            user.tickets[i].display();
+        }
     }
 
     public void ApproveDenyTicket(Ticket ticket) {
-
+        System.out.println("You don't have permission");
     }
 
     public void AddTicket(Ticket ticket) {
