@@ -1,6 +1,6 @@
 public class Login { // This class should handel log in procedures
     Database DB = new Database();
-    Manager session;
+    Manager session = null;
     public Login(){
     }
     public int registster(String usr, String psw){ // registration funct
@@ -21,15 +21,25 @@ public class Login { // This class should handel log in procedures
             return 0; // successfully created acc
         }
     }
-    Users GetID(String ID, String Password){ // check if user exists and has correct password
+    Manager GetID(String ID, String Password){ // check if user exists and has correct password
+        if(session != null){
+            System.err.println("Your already logged in");
+            return session;
+        }
         Users temp = DB.find(ID);
         if(temp != null && temp.Pass.equals(Password)){
-            return temp; // ID verified, return the account type, to be processed by the state classes
-        } else {
-            return null; // wrong
+            // ID verified, return the account type, to be processed by the state classes
+            if(temp.acctype == 0){
+                return new EmplyeeManager(temp);
+            } else if (temp.acctype == 1){
+                return new ManagerManager(temp);
+            }
         }
+        return null; // Wrong username or password
     }
-
+    public void logout(){
+        session = null;
+    }
     public static void main(String args[]) {
         Login login = new Login();
         login.registster("AAA","AAA", 1);
@@ -39,16 +49,8 @@ public class Login { // This class should handel log in procedures
         }
         login.registster("AEC","AAA");
         login.registster("ACDC","AAA");
-        Users user = login.GetID("ACDC", "AAA");
-        if(user == null){
-            System.out.println("Login failed ");
-        }else if(user.acctype == 0){
-            System.out.print("Welcome Employee ");
-            System.out.println(user.ID);
-        }else if(user.acctype == 1){
-            System.out.print("Welcome Manager ");
-            System.out.println(user.ID);
-        }
+        Manager Session = login.GetID("ACDC", "AAA");
+
     }
 }
 
