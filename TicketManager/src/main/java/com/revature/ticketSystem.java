@@ -10,33 +10,75 @@ public class ticketSystem {
         });
         app.post("/register",context -> {
                     User user = context.bodyAsClass(User.class);
-                    db.registerUser(user.Name,user.Password);
+                    db.registerUser(user.firstName,user.lastName,user.userName,user.Password);
                 });
+        app.post("/login",context -> {
+            login login = context.bodyAsClass(login.class);
+            User user = db.login(login.userName, login.password);
+            if(user != null) {
+                System.out.println(user.acctype);
+            }
+        });
         app.get("/TeaPot",context -> {
             context.result("TeaPot");
 
         });
     }
 }
+class login{
+    String userName;
+    String password;
+    public login(){}
 
+    public String getUserName() {
+        return userName;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
 class User { // Database information storage
-    String Name; // stores Usernames will be used as the sorting variable
+    String firstName; // stores names will be used as the sorting variable
+    String lastName;
+    String userName;
     String Password; // Identifier
     String UID = null;
-    int acctype = 0; // 0 is employee, 1 is manager
+    String acctype = "EMP"; // 0 is employee, 1 is manager
 
     public User(){} // empty constructor for javalin to use
-    public User(String Name, String Password, int type){
-        this.Name = Name;
+    public User(String firstName,String lastName, String userName, String Password, String type){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userName = userName;
         this.Password = Password;
         acctype = type;
     }
-    public String getName() {
-        return Name;
+    public String getfirstName() {
+        return firstName;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setFirstName(String Name) {
+        this.firstName = Name;
+    }
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String Name) {
+        this.lastName = Name;
+    }
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String Name) {
+        this.userName = Name;
     }
 
     public String getPassword() {
