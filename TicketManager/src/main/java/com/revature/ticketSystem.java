@@ -1,51 +1,58 @@
 package com.revature;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.javalin.Javalin;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ticketSystem {
     public static void main(String[] args) {
-        Connection db = null;
-        try {
-            db = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres","postgres","Shining");
-            Javalin app = Javalin.create().start(8080);
-            app.get("/login",context -> {
-            });
-            app.get("/TeaPot",context -> {
-                context.result("TeaPot");
+        databaseHandler db = new databaseHandler();
+        Javalin app = Javalin.create().start(8080);
+        app.get("/login",context -> {
+            context.result("Login Screen");
+        });
+        app.post("/login",context -> {
+                    User user = context.bodyAsClass(User.class);
+                    db.insert(user.Name,user.Password);
+                });
+        app.get("/TeaPot",context -> {
+            context.result("TeaPot");
 
-            });
-            app.post("/users",context -> {
-                context.result("1");
-                context.redirect("/users");
-            });
-        } catch(Exception e){
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
-            System.exit(0);
-        }
+        });
     }
 }
 
-class User { // Node like structure that will store information used
-    int UID;
+class User { // Database information storage
     String Name; // stores Usernames will be used as the sorting variable
-    String Pass; // Identifier
-    int acctype; // 0 is employee, 1 is manager
-    Ticket[] tickets;
+    String Password; // Identifier
+    String UID = null;
+    int acctype = 0; // 0 is employee, 1 is manager
+    Ticket[] tickets = null;
 
     public User(){} // empty constructor for javalin to use
     public User(String Name, String Password, int type){
         this.Name = Name;
-        Pass = Password;
+        this.Password = Password;
         acctype = type;
+    }
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String Name) {
+        this.Name = Name;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String Password) {
+        this.Password = Password;
     }
 }
 
-class Ticket {
+class Ticket { // Database infomration storage
     float Reimburstment;
     String Disc;
     short status = 0; // 0 = pending, 1 = accepted, 2 = rejected
