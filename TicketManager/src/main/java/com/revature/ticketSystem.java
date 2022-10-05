@@ -1,8 +1,5 @@
 package com.revature;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.javalin.Javalin;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ticketSystem {
     public static void main(String[] args) {
@@ -11,9 +8,9 @@ public class ticketSystem {
         app.get("/login",context -> {
             context.result("Login Screen");
         });
-        app.post("/login",context -> {
+        app.post("/register",context -> {
                     User user = context.bodyAsClass(User.class);
-                    db.insert(user.Name,user.Password);
+                    db.registerUser(user.Name,user.Password);
                 });
         app.get("/TeaPot",context -> {
             context.result("TeaPot");
@@ -27,7 +24,6 @@ class User { // Database information storage
     String Password; // Identifier
     String UID = null;
     int acctype = 0; // 0 is employee, 1 is manager
-    Ticket[] tickets = null;
 
     public User(){} // empty constructor for javalin to use
     public User(String Name, String Password, int type){
