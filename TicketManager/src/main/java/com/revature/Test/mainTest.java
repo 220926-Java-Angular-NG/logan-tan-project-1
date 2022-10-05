@@ -1,4 +1,5 @@
-package com.revature;
+package com.revature.Test;
+import com.revature.Services.ticketSystem;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 public class mainTest {
