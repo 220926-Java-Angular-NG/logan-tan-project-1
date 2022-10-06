@@ -26,19 +26,24 @@ public class employeeHandler implements Handler {
             AddTicket(ticket);
         });
         app.get(path+"/viewticket",context -> {
-            ViewTickets(String.valueOf(user.getUID()),"%");
+            StringBuilder TicketRaw = new StringBuilder();
+            List<Ticket> tickets = null;
+            tickets = ViewTickets(String.valueOf(user.getUID()),"%");
+            for(Ticket ticket: tickets){
+                TicketRaw.append(ticket.display()).append("\n\n");
+            }
+            context.result(TicketRaw.toString());
         });
     }
     @Override
-    public void ViewTickets(String who, String status) {
+    public List<Ticket> ViewTickets(String who, String status) {
+        List<Ticket> tickets = null;
         try{
-        List<Ticket> tickets = db.viewTickets(who,status);
-        for(Ticket ticket: tickets){
-            ticket.display();
-        }}catch (SQLException e){
+        tickets = db.viewTickets(who,status);
+        }catch (SQLException e){
             System.out.println(e.getMessage());
         }
-
+        return tickets;
     }
 
     @Override

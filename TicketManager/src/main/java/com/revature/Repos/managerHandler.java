@@ -3,10 +3,13 @@ import com.revature.Utils.Handler;
 import com.revature.models.Ticket;
 import io.javalin.Javalin;
 
+import java.util.List;
+
 public class managerHandler implements Handler {
     @Override
-    public void ViewTickets(String who, String status) {
+    public List<Ticket> ViewTickets(String who, String status) {
 
+        return null;
     }
 
     @Override

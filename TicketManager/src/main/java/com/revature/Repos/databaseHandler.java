@@ -109,7 +109,7 @@ public class databaseHandler { // handels database quries
         act.setString(2,status);
         ResultSet rs = act.executeQuery();
         while(rs.next()){
-            tickets.add(new Ticket(Float.parseFloat(rs.getString("amount")),rs.getString("description"),rs.getString("status")));
+            tickets.add(new Ticket(Float.parseFloat(rs.getString("amount")),rs.getString("description"),rs.getString("status"), rs.getString("firstname")+" "+rs.getString("lastname")));
         }
         }catch(SQLException e){
             System.out.println(e.getMessage());

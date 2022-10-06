@@ -5,12 +5,20 @@ public class Ticket { // Database infomration storage
     String Disc;
     String status = "PEN"; // PEN = pending, ACC = accepted, REJ = rejected
 
+    String Owner = "";
+
     public Ticket() {
     } // empty constructor for javalin to use
 
     public Ticket(float amt, String Des) {
         Reimburstment = amt;
         Disc = Des;
+    }
+    public Ticket(float amt, String Des,String status,String Owner) {
+        setDisc(Des);
+        setOwner(Owner);
+        setReimburstment(amt);
+        setStatus(status);
     }
     public Ticket(float amt, String Des,String status) {
         Reimburstment = amt;
@@ -23,24 +31,30 @@ public class Ticket { // Database infomration storage
     public void setReimburstment(float Reimburstment){this.Reimburstment = Reimburstment;}
     public void setDisc(String Disc){this.Disc = Disc;}
     public void setStatus(String status){this.status = status;}
-
-    public void display() {
-        System.out.println("Amount: " + Reimburstment);
-        System.out.println(Disc);
+    public String getOwner() {return Owner;}
+    public void setOwner(String owner) {Owner = owner;}
+    public String display() {
+        String out = "";
+        out += "Amount: " + getReimburstment();
+        out +="\n" + getDisc();
+        if(Owner != ""){
+            out += "\nOwner: " + getOwner();
+        }
         switch (status) {
             case "PEN":
-                System.out.println("Pending");
+                out += "\nPending";
                 break;
             case "ACC":
-                System.out.println("Accepted");
+                out += "\nAccepted";
                 break;
             case "REJ":
-                System.out.println("Rejected");
+                out += "\nRejected";
                 break;
             default: {
-                System.out.println("Unknown");
+                out += "\nStatus Unknown";
                 break;
             }
         }
+        return out;
     }
 }
