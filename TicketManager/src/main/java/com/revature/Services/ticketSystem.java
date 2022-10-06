@@ -5,17 +5,8 @@ import com.revature.Utils.Handler;
 import com.revature.models.User;
 import com.revature.models.login;
 import io.javalin.Javalin;
-import io.javalin.apibuilder.ApiBuilder;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.atomic.AtomicReferenceArray;
-
-import static io.javalin.apibuilder.ApiBuilder.delete;
-import static io.javalin.apibuilder.ApiBuilder.path;
-
 public class ticketSystem {
     public static void main(String[] args) {
         databaseHandler db = new databaseHandler();
