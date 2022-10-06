@@ -1,11 +1,14 @@
 package com.revature.Repos;
 import com.revature.Utils.userHandler;
 import com.revature.models.Ticket;
+import com.revature.models.User;
 import io.javalin.Javalin;
 
 import java.util.List;
 
 public class managerHandler implements userHandler {
+    boolean loggedin;
+
     @Override
     public List<Ticket> ViewTickets(String who, String status) {
 
@@ -39,5 +42,20 @@ public class managerHandler implements userHandler {
     @Override
     public databaseHandler getDb() {
         return db;
+    }
+
+    @Override
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public void setLoggedin(boolean state) {
+        this.loggedin = state;
+    }
+
+    @Override
+    public boolean isLoggedin() {
+        return false;
     }
 }

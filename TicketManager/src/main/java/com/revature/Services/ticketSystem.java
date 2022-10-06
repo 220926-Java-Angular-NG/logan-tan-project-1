@@ -2,7 +2,6 @@ package com.revature.Services;
 import com.revature.Repos.databaseHandler;
 import com.revature.Repos.employeeHandler;
 import com.revature.Utils.userHandler;
-import com.revature.Utils.userHandler;
 import com.revature.models.User;
 import com.revature.models.login;
 import io.javalin.Javalin;
@@ -11,7 +10,6 @@ import java.util.List;
 public class ticketSystem {
     public static void main(String[] args) {
         databaseHandler db = new databaseHandler();
-        String dummy = "";
         List<userHandler> scessions = new ArrayList<>();
         List<String> loggedOn = new ArrayList<>();
         Javalin app = Javalin.create().start(8080);
@@ -38,17 +36,28 @@ public class ticketSystem {
                 });
         app.post("/login",context -> {
             login login = context.bodyAsClass(login.class);
+            userHandler temp = null;
             User user = db.login(login.getUserName(), login.getPassword());
-            if(user != null && !loggedOn.contains(user.getUserName()) && user.getPassword().equals(login.getPassword())) {
-                if(user.getAcctype().equals("EMP")){
-                    String path = "/"+user.getAcctype()+"/"+user.getLastName()+"/"+ user.getUID();
+            if(user != null  && user.getPassword().equals(login.getPassword())) {
+                String path = "/"+user.getAcctype()+"/"+user.getLastName()+"/"+ user.getUID();
+                if(!loggedOn.contains(user.getUserName())){
                     context.redirect(path);
                     scessions.add(new employeeHandler(app,path,db, user));
                     loggedOn.add(user.getUserName());
+                } else{
+                    for(userHandler scession: scessions){
+                        if(scession.getPath().equals(path)){
+                            temp = scession;
+                            break;
+                        }
+                    }
+                    if(temp != null){
+                        context.redirect(path);
+                        temp.setLoggedin(true);
+                    }
                 }
-                context.result(user.getAcctype());
             } else{
-                context.result("Login Failure");
+                context.result("Login Failure").status(400);
             }
         });
         app.post("/logout",context -> {
@@ -61,11 +70,11 @@ public class ticketSystem {
                     for(userHandler scession: scessions){
                         if(scession.getPath().equals(path)){
                             temp = scession;
+                            break;
                         }
                     }
                     if(temp != null){
-                        scessions.remove(temp);
-                        loggedOn.remove(user.getUserName());
+                        temp.setLoggedin(false);
                     }
                 }
                 context.result("Logged Out");

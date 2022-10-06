@@ -24,11 +24,19 @@ public class databaseHandler { // handels database quries
             throw new RuntimeException(e);
         }
     }
+    public databaseHandler(Connection connection) {
+        this.connection = connection;
+
+    }
     public boolean registerEMP(String firstName, String lastName, String userName,String Password) throws SQLException {
         Query = "Select userName from Accounts where userName = ?;";
         act = connection.prepareStatement(Query);
         act.setString(1,userName);
-        res = act.executeQuery();
+        try {
+            res = act.executeQuery();
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
         if(!res.next()){
             Query = ("INSERT INTO Accounts (firstName,lastName,userName,Password) VALUES (?,?,?,?);");
             act = connection.prepareStatement(Query);
@@ -46,7 +54,11 @@ public class databaseHandler { // handels database quries
         Query = "Select userName from Accounts where userName = ?;";
         act = connection.prepareStatement(Query);
         act.setString(1,userName);
-        res = act.executeQuery();
+        try {
+            res = act.executeQuery();
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
         if(!res.next()){
             Query = ("INSERT INTO Accounts (firstName,lastName,userName,Password,acctype) VALUES (?,?,?,?,'MAN');");
             act = connection.prepareStatement(Query);
@@ -64,7 +76,11 @@ public class databaseHandler { // handels database quries
         Query = "Select * from Accounts where userName = ?;";
         act = connection.prepareStatement(Query);
         act.setString(1,userName);
-        res = act.executeQuery();
+        try {
+            res = act.executeQuery();
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
         if(!res.next()){
             return null; // There is no user with this userName
         } else{
@@ -77,10 +93,14 @@ public class databaseHandler { // handels database quries
         }
     }
     public User findUser(String userName) throws SQLException{
-        Query = "Select * from Accounts where userName = ?;";
-        act = connection.prepareStatement(Query);
-        act.setString(1,userName);
-        res = act.executeQuery();
+        try {
+            Query = "Select * from Accounts where userName = ?;";
+            act = connection.prepareStatement(Query);
+            act.setString(1, userName);
+            res = act.executeQuery();
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
         if(!res.next()){
             return null; // There is no user with this userName
         } else {

@@ -13,33 +13,50 @@ public class employeeHandler implements userHandler {
     Javalin app = null;
     User user = null;
     List<Ticket> tickets = null;
+    boolean loggedin = true;
     public employeeHandler(Javalin app, String path, databaseHandler db, User user){
         this.app = app;
         this.path = path;
         this.db = db;
         this.user = user;
         app.get(path, context -> {
+            if(loggedin){
             context.result("Employee home page\n    addticket\n    viewtickets");
-
+            }else{
+                context.result("Not logged in").status(200);
+            }
         });
         app.post(path+"/addticket",context -> {
+            if(loggedin){
             Ticket ticket = context.bodyAsClass(Ticket.class);
             AddTicket(ticket);
+            }else{
+                context.result("Not logged in").status(200);
+            }
         });
         app.post(path+"/viewticket",context -> {
+            if(loggedin){
             viewTicketRequest request = context.bodyAsClass(viewTicketRequest.class);
             tickets = ViewTickets(String.valueOf(user.getUID()),request.getStatus());
             context.redirect(path+"/viewticket");
+            }else{
+                context.result("Not logged in").status(200);
+            }
         });
         app.get(path+"/viewticket",context -> {
+            if(loggedin){
             StringBuilder TicketRaw = new StringBuilder();
             if(tickets != null) {
                 for (Ticket ticket : tickets) {
                     TicketRaw.append(ticket.display()).append("\n\n");
                 }
+                context.result(String.valueOf(TicketRaw));
+                context.json(tickets);
                 tickets = null;
+
+            }}else{
+                context.result("Not logged in").status(200);
             }
-            context.result(TicketRaw.toString());
         });
     }
     @Override
@@ -85,5 +102,19 @@ public class employeeHandler implements userHandler {
     @Override
     public databaseHandler getDb() {
         return db;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public void setLoggedin(boolean state) {
+        loggedin = state;
+    }
+
+    @Override
+    public boolean isLoggedin() {
+        return false;
     }
 }
