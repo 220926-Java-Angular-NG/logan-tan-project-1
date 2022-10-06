@@ -1,5 +1,5 @@
 package com.revature.Repos;
-import com.revature.Utils.Handler;
+import com.revature.Utils.userHandler;
 import com.revature.models.Ticket;
 import com.revature.models.User;
 import com.revature.models.viewTicketRequest;
@@ -7,7 +7,7 @@ import io.javalin.Javalin;
 import java.sql.SQLException;
 import java.util.List;
 
-public class employeeHandler implements Handler {
+public class employeeHandler implements userHandler {
     databaseHandler db = null;
     String path = null;
     Javalin app = null;

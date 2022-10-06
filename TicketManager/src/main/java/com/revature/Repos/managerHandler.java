@@ -1,11 +1,11 @@
 package com.revature.Repos;
-import com.revature.Utils.Handler;
+import com.revature.Utils.userHandler;
 import com.revature.models.Ticket;
 import io.javalin.Javalin;
 
 import java.util.List;
 
-public class managerHandler implements Handler {
+public class managerHandler implements userHandler {
     @Override
     public List<Ticket> ViewTickets(String who, String status) {
 

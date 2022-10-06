@@ -7,7 +7,7 @@ import io.javalin.Javalin;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface Handler {
+public interface userHandler {
     databaseHandler db = null;
     String path = null;
     Javalin app = null;

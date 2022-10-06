@@ -1,7 +1,8 @@
 package com.revature.Services;
 import com.revature.Repos.databaseHandler;
 import com.revature.Repos.employeeHandler;
-import com.revature.Utils.Handler;
+import com.revature.Utils.userHandler;
+import com.revature.Utils.userHandler;
 import com.revature.models.User;
 import com.revature.models.login;
 import io.javalin.Javalin;
@@ -11,7 +12,7 @@ public class ticketSystem {
     public static void main(String[] args) {
         databaseHandler db = new databaseHandler();
         String dummy = "";
-        List<Handler> scessions = new ArrayList<>();
+        List<userHandler> scessions = new ArrayList<>();
         List<String> loggedOn = new ArrayList<>();
         Javalin app = Javalin.create().start(8080);
         app.get("/login",context -> {
@@ -22,17 +23,18 @@ public class ticketSystem {
                     if(user.getAcctype().equals("EMP")){
                         if(db.registerEMP(user.getfirstName(),user.getLastName(),user.getUserName(),user.getPassword()))
                         {
-                            context.result("Account created");
+                            context.result("Account created").status(200);
                         }else{
-                            context.result("Process Failure");
+                            context.result("Process Failure").status(400);
                         }
                     } else{
                         if(db.registerMAN(user.getfirstName(),user.getLastName(),user.getUserName(),user.getPassword())){
-                            context.result("Account created");
+                            context.result("Account created").status(200);
                         }else{
-                            context.result("Process Failure");
+                            context.result("Process Failure").status(400);
                         }
                     }
+                    context.redirect("/login");
                 });
         app.post("/login",context -> {
             login login = context.bodyAsClass(login.class);
@@ -50,13 +52,13 @@ public class ticketSystem {
             }
         });
         app.post("/logout",context -> {
-            Handler temp = null;
+            userHandler temp = null;
             login login = context.bodyAsClass(login.class);
             User user = db.findUser(login.getUserName());
             if(user != null && loggedOn.contains(user.getUserName())) {
                 if(user.getAcctype().equals("EMP")){
                     String path = "/"+user.getAcctype()+"/"+user.getLastName()+"/"+ user.getUID();
-                    for(Handler scession: scessions){
+                    for(userHandler scession: scessions){
                         if(scession.getPath().equals(path)){
                             temp = scession;
                         }
