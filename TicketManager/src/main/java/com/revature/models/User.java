@@ -5,7 +5,7 @@ public class User { // Database information storage
     String lastName;
     String userName;
     String Password; // Identifier
-    String UID = null;
+    int UID;
     String acctype = "EMP"; // 0 is employee, 1 is manager
 
     public User() {
@@ -17,6 +17,14 @@ public class User { // Database information storage
         this.userName = userName;
         this.Password = Password;
         acctype = type;
+    }
+    public User(String firstName, String lastName, String userName, String Password, String type, int UID) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userName = userName;
+        this.Password = Password;
+        acctype = type;
+        this.UID = UID;
     }
 
     public String getfirstName() {
@@ -58,4 +66,6 @@ public class User { // Database information storage
     public String getAcctype() {
         return acctype;
     }
+    public int getUID(){return UID;}
+    public void setUID(int UID){this.UID = UID;}
 }
