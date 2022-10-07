@@ -1,5 +1,6 @@
 package com.revature.Repos;
 
+import com.revature.Utils.ConnectionManager;
 import com.revature.models.Ticket;
 import com.revature.models.User;
 
@@ -14,7 +15,7 @@ public class databaseHandler { // handels database quries
     ResultSet res = null;
     public databaseHandler() {
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=ticketdb", "postgres", "Shining");
+            connection = ConnectionManager.getConn();
             act = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Accounts (firstName VARCHAR(40) not null, lastName VARCHAR(40) not null,Password VARCHAR(40) not null, userName VARCHAR(40) not null unique,EID SERIAL PRIMARY KEY, accType VARCHAR(3) DEFAULT 'EMP')");
             act.execute();
             act = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Tickets (Amount VARCHAR(12), Description VARCHAR(140), Status VARCHAR(6), eid INT not null, TID Serial PRIMARY KEY, CONSTRAINT fk_Account FOREIGN KEY (EID) REFERENCES Accounts (EID))");

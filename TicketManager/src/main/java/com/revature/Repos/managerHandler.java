@@ -1,60 +1,53 @@
 package com.revature.Repos;
-import com.revature.Utils.userHandler;
 import com.revature.models.Ticket;
 import com.revature.models.User;
 import io.javalin.Javalin;
 
 import java.util.List;
 
-public class managerHandler implements userHandler {
-    boolean loggedin;
+public class managerHandler{
+    databaseHandler db = null;
+    String path = null;
+    Javalin app = null;
+    User user = null;
+    List<Ticket> tickets = null;
+    boolean loggedin = true;
 
-    @Override
     public List<Ticket> ViewTickets(String who, String status) {
 
         return null;
     }
 
-    @Override
     public boolean ApproveDenyTicket(Ticket ticket) {
         return false;
     }
 
-    @Override
     public void AddTicket(Ticket ticket) {
     }
-
-    @Override
     public void Logout() {
 
     }
 
-    @Override
     public String getPath() {
         return path;
     }
 
-    @Override
     public Javalin getApp() {
         return app;
     }
 
-    @Override
     public databaseHandler getDb() {
         return db;
     }
 
-    @Override
     public User getUser() {
         return user;
     }
 
-    @Override
     public void setLoggedin(boolean state) {
         this.loggedin = state;
     }
 
-    @Override
     public boolean isLoggedin() {
         return false;
     }
