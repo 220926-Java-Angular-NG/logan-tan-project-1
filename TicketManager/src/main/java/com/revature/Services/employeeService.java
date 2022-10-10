@@ -31,43 +31,18 @@ public class employeeService implements userService {
         app.post(path+"/viewticket", emh.GetTickets);
         app.get(path+"/viewticket",emh.ViewTickets);
     }
-
-    @Override
-    public List<Ticket> ViewTickets(String who, String status) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public boolean ApproveDenyTicket(Ticket ticket) {
-        return false;
-    }
-
-    @Override
-    public void AddTicket(Ticket ticket) throws SQLException {
-
-    }
-
-    @Override
-    public void Logout() {
-
-    }
-
-    @Override
     public String getPath() {
         return path;
     }
 
-    @Override
     public Javalin getApp() {
         return app;
     }
 
-    @Override
     public databaseHandler getDb() {
         return db;
     }
 
-    @Override
     public User getUser() {
         return user;
     }

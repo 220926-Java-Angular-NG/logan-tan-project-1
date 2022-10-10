@@ -13,14 +13,7 @@ public interface userService {
     String path = null;
     Javalin app = null;
     User user = null;
-    List<Ticket> ViewTickets(String who, String status) throws SQLException;
-    boolean ApproveDenyTicket(Ticket ticket);
-    void AddTicket(Ticket ticket) throws SQLException;
-    void Logout();
     String getPath();
-    Javalin getApp();
-    databaseHandler getDb();
-    User getUser();
     void setLoggedin(boolean state);
     boolean isLoggedin();
 }

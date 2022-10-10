@@ -1,15 +1,19 @@
 package com.revature.Repos;
 import com.revature.Services.employeeService;
+import com.revature.Services.loginService;
 import com.revature.models.Ticket;
 import com.revature.models.User;
 import com.revature.models.viewTicketRequest;
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class employeeHandler{
+    private static final Logger LOGGER = LoggerFactory.getLogger(employeeHandler.class);
     databaseHandler db = null;
     String path = null;
     Javalin app = null;
@@ -22,6 +26,7 @@ public class employeeHandler{
         this.path = path;
         this.db = db;
         this.user = user;
+
     }
 
     public Handler HomePage = context ->{
@@ -71,7 +76,7 @@ public class employeeHandler{
         try{
         tickets = db.viewTickets(who,status);
         }catch (SQLException e){
-            System.out.println(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         return tickets;
     }
@@ -82,7 +87,7 @@ public class employeeHandler{
         try{
         db.addTicket(ticket,user.getUID());
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            LOGGER.error(e.getMessage());;
         }
     }
     public void Logout() {
@@ -104,7 +109,7 @@ public class employeeHandler{
     public void setLoggedin(boolean state) {
         loggedin = state;
     }
-    public boolean isLoggedin() {
-        return false;
+    public boolean getLoggedin() {
+        return loggedin;
     }
 }

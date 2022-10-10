@@ -3,12 +3,15 @@ package com.revature.Repos;
 import com.revature.Utils.ConnectionManager;
 import com.revature.models.Ticket;
 import com.revature.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class databaseHandler { // handels database quries
+    private static final Logger LOGGER = LoggerFactory.getLogger(databaseHandler.class);
     Connection connection = null;
     PreparedStatement act = null;
     String Query = null;
@@ -21,8 +24,7 @@ public class databaseHandler { // handels database quries
             act = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Tickets (Amount VARCHAR(12), Description VARCHAR(140), Status VARCHAR(6), eid INT not null, TID Serial PRIMARY KEY, CONSTRAINT fk_Account FOREIGN KEY (EID) REFERENCES Accounts (EID))");
             act.execute();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);
+            LOGGER.error(e.getMessage());;
         }
     }
     public databaseHandler(Connection connection) {
@@ -36,7 +38,7 @@ public class databaseHandler { // handels database quries
         try {
             res = act.executeQuery();
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         if(!res.next()){
             Query = ("INSERT INTO Accounts (firstName,lastName,userName,Password) VALUES (?,?,?,?);");
@@ -58,7 +60,7 @@ public class databaseHandler { // handels database quries
         try {
             res = act.executeQuery();
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            LOGGER.error(e.getMessage());;
         }
         if(!res.next()){
             Query = ("INSERT INTO Accounts (firstName,lastName,userName,Password,acctype) VALUES (?,?,?,?,'MAN');");
@@ -80,7 +82,7 @@ public class databaseHandler { // handels database quries
         try {
             res = act.executeQuery();
         }catch (SQLException e){
-            System.out.println(e.getMessage());
+            LOGGER.error(e.getMessage());;
         }
         if(!res.next()){
             return null; // There is no user with this userName
@@ -100,7 +102,7 @@ public class databaseHandler { // handels database quries
             act.setString(1, userName);
             res = act.executeQuery();
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            LOGGER.error(e.getMessage());;
         }
         if(!res.next()){
             return null; // There is no user with this userName
@@ -118,7 +120,7 @@ public class databaseHandler { // handels database quries
     act.setInt(4,eid);
     act.execute();
         }catch (SQLException e){
-            System.out.println(e.getMessage());
+            LOGGER.error(e.getMessage());;
         }
     }
     public List<Ticket> viewTickets(String who, String status) throws SQLException {
@@ -133,7 +135,7 @@ public class databaseHandler { // handels database quries
             tickets.add(new Ticket(Float.parseFloat(rs.getString("amount")),rs.getString("description"),rs.getString("status"), rs.getString("firstname")+" "+rs.getString("lastname")));
         }
         }catch(SQLException e){
-            System.out.println(e.getMessage());
+            LOGGER.error(e.getMessage());;
         }
         return tickets;
     }
