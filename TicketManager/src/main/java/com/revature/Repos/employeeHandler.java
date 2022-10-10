@@ -1,6 +1,4 @@
 package com.revature.Repos;
-import com.revature.Services.employeeService;
-import com.revature.Services.loginService;
 import com.revature.models.Ticket;
 import com.revature.models.User;
 import com.revature.models.viewTicketRequest;
@@ -26,12 +24,11 @@ public class employeeHandler{
         this.path = path;
         this.db = db;
         this.user = user;
-
     }
 
     public Handler HomePage = context ->{
         if(loggedin){
-            context.result("Employee home page\n    addticket\n    viewtickets");
+            context.result("Employee home page\n    AddTicket\n    ViewTickets");
         }else{
             context.result("Not logged in").status(404);
         }
@@ -66,7 +63,7 @@ public class employeeHandler{
         if(loggedin){
             viewTicketRequest request = context.bodyAsClass(viewTicketRequest.class);
             tickets = ViewTickets(String.valueOf(user.getUID()),request.getStatus());
-            context.redirect(path+"/viewticket");
+            context.redirect(path+"/ViewTicket");
         }else{
             context.result("Not logged in").status(404);
         }
@@ -74,20 +71,18 @@ public class employeeHandler{
     public List<Ticket> ViewTickets(String who, String status) {
         List<Ticket> tickets = null;
         try{
-        tickets = db.viewTickets(who,status);
+        tickets = db.viewTickets(who,status,false);
         }catch (SQLException e){
             LOGGER.error(e.getMessage());
         }
         return tickets;
     }
-    public boolean ApproveDenyTicket(Ticket ticket) {
-        return false;
-    }
+
     public void AddTicket(Ticket ticket) {
         try{
         db.addTicket(ticket,user.getUID());
         } catch (SQLException e){
-            LOGGER.error(e.getMessage());;
+            LOGGER.error(e.getMessage());
         }
     }
     public void Logout() {

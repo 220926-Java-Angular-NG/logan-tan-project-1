@@ -1,5 +1,6 @@
 package com.revature.Repos;
 import com.revature.Services.employeeService;
+import com.revature.Services.managerService;
 import com.revature.Utils.userService;
 import com.revature.models.User;
 import com.revature.models.login;
@@ -7,8 +8,6 @@ import io.javalin.Javalin;
 import io.javalin.http.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +16,9 @@ public class loginHandler {
     databaseHandler db = new databaseHandler();
     List<userService> scessions = new ArrayList<>();
     List<String> loggedOn = new ArrayList<>();
-    Javalin app = null;
+    Javalin app;
     public loginHandler(Javalin app){this.app = app;}
-    public Handler LandingPage = context -> {
-        context.result("Login Screen");
-    };
+    public Handler LandingPage = context -> context.result("Login Screen");
     public Handler Registration = context -> {
         User user = context.bodyAsClass(User.class);
         if(user.getAcctype().equals("EMP")){
@@ -48,7 +45,11 @@ public class loginHandler {
             String path = "/"+user.getAcctype()+"/"+user.getLastName()+"/"+ user.getUID();
             if(!loggedOn.contains(user.getUserName())){
                 context.redirect(path);
-                scessions.add(new employeeService(app,path,db, user));
+                if(user.getAcctype().equals("EMP")){
+                    scessions.add(new employeeService(app,path,db, user));
+                }else {
+                    scessions.add(new managerService(app,path,db, user));
+                }
                 loggedOn.add(user.getUserName());
             } else{
                 for(userService scession: scessions){

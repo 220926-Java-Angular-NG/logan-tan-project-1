@@ -6,8 +6,6 @@ import com.revature.Utils.userService;
 import com.revature.models.Ticket;
 import com.revature.models.User;
 import io.javalin.Javalin;
-
-import java.sql.SQLException;
 import java.util.List;
 
 public class employeeService implements userService {
@@ -27,9 +25,9 @@ public class employeeService implements userService {
         this.user = user;
 
         app.get(path,emh.HomePage);
-        app.post(path+"/addticket", emh.AddTicket);
-        app.post(path+"/viewticket", emh.GetTickets);
-        app.get(path+"/viewticket",emh.ViewTickets);
+        app.post(path+"/AddTicket", emh.AddTicket);
+        app.post(path+"/ViewTicket", emh.GetTickets);
+        app.get(path+"/ViewTicket",emh.ViewTickets);
     }
     public String getPath() {
         return path;

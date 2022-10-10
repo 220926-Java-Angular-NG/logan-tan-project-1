@@ -24,7 +24,7 @@ public class databaseHandler { // handels database quries
             act = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Tickets (Amount VARCHAR(12), Description VARCHAR(140), Status VARCHAR(6), eid INT not null, TID Serial PRIMARY KEY, CONSTRAINT fk_Account FOREIGN KEY (EID) REFERENCES Accounts (EID))");
             act.execute();
         } catch (SQLException e) {
-            LOGGER.error(e.getMessage());;
+            LOGGER.error(e.getMessage());
         }
     }
     public databaseHandler(Connection connection) {
@@ -60,7 +60,7 @@ public class databaseHandler { // handels database quries
         try {
             res = act.executeQuery();
         } catch (SQLException e){
-            LOGGER.error(e.getMessage());;
+            LOGGER.error(e.getMessage());
         }
         if(!res.next()){
             Query = ("INSERT INTO Accounts (firstName,lastName,userName,Password,acctype) VALUES (?,?,?,?,'MAN');");
@@ -82,7 +82,7 @@ public class databaseHandler { // handels database quries
         try {
             res = act.executeQuery();
         }catch (SQLException e){
-            LOGGER.error(e.getMessage());;
+            LOGGER.error(e.getMessage());
         }
         if(!res.next()){
             return null; // There is no user with this userName
@@ -102,7 +102,7 @@ public class databaseHandler { // handels database quries
             act.setString(1, userName);
             res = act.executeQuery();
         } catch (SQLException e){
-            LOGGER.error(e.getMessage());;
+            LOGGER.error(e.getMessage());
         }
         if(!res.next()){
             return null; // There is no user with this userName
@@ -110,6 +110,9 @@ public class databaseHandler { // handels database quries
             return new User(res.getString("firstname"),res.getString("lastname"),res.getString("username"),"",res.getString("acctype"),res.getInt("eid"));
         }
     }
+
+
+    //Ticket management possibly could be refactored into a different class
     public void addTicket(Ticket ticket, int eid) throws SQLException {
         try{
     Query = "INSERT INTO Tickets (amount, description, status,eid) VALUES (?,?,?,?)";
@@ -120,23 +123,50 @@ public class databaseHandler { // handels database quries
     act.setInt(4,eid);
     act.execute();
         }catch (SQLException e){
-            LOGGER.error(e.getMessage());;
+            LOGGER.error(e.getMessage());
         }
     }
-    public List<Ticket> viewTickets(String who, String status) throws SQLException {
+    public List<Ticket> viewTickets(String who, String status, boolean manager) throws SQLException {
         List<Ticket> tickets = new ArrayList<>();
         try{
-        Query = "select * from tickets t join accounts a on a.eid = t.eid where cast(t.eid as text) like ? and status like ? ";
+            if(manager){ // if a manager is simply reviewing tickets they should not see their own
+                Query = "select * from tickets t join accounts a on a.eid = t.eid where cast(t.eid as text) not like ? and status like ? ";
+            }else{
+                Query = "select * from tickets t join accounts a on a.eid = t.eid where cast(t.eid as text) like ? and status like ? ";
+            }
         act = connection.prepareStatement(Query);
         act.setString(1,who);
         act.setString(2,status);
         ResultSet rs = act.executeQuery();
         while(rs.next()){
-            tickets.add(new Ticket(Float.parseFloat(rs.getString("amount")),rs.getString("description"),rs.getString("status"), rs.getString("firstname")+" "+rs.getString("lastname")));
+            tickets.add(new Ticket(Float.parseFloat(rs.getString("amount")),rs.getString("description"),rs.getString("status"), rs.getString("firstname")+" "+rs.getString("lastname"), rs.getInt("tid")));
         }
         }catch(SQLException e){
-            LOGGER.error(e.getMessage());;
+            LOGGER.error(e.getMessage());
         }
         return tickets;
+    }
+    public boolean AprDenTicket(String state, int id) {
+        Query = "select from tickets where tid = ? and status = 'PEN'"; // sanity check
+        try{
+            act = connection.prepareStatement(Query);
+            act.setInt(1,id);
+            ResultSet rs = act.executeQuery();
+            if(!rs.next()){
+                return false;
+            }
+    }catch (SQLException e){
+            LOGGER.error(e.getMessage());
+        }
+        Query = "update tickets SET status =? where tid = ? and status = 'PEN'";
+        try{
+        act = connection.prepareStatement(Query);
+        act.setString(1,state);
+        act.setInt(2,id);
+            act.execute();
+        }catch (SQLException e){
+            LOGGER.error(e.getMessage());
+        }
+        return true;
     }
 }

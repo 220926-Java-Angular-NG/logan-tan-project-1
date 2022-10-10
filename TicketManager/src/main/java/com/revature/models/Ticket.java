@@ -1,11 +1,13 @@
 package com.revature.models;
 
+import java.util.Objects;
+
 public class Ticket { // Database infomration storage
     float Reimburstment;
     String Disc;
     String status = "PEN"; // PEN = pending, ACC = accepted, REJ = rejected
-
     String Owner = "";
+    int id;
 
     public Ticket() {
     } // empty constructor for javalin to use
@@ -20,6 +22,13 @@ public class Ticket { // Database infomration storage
         setReimburstment(amt);
         setStatus(status);
     }
+    public Ticket(float amt, String Des,String status,String Owner, int id) {
+        setDisc(Des);
+        setOwner(Owner);
+        setReimburstment(amt);
+        setStatus(status);
+        setId(id);
+    }
     public Ticket(float amt, String Des,String status) {
         Reimburstment = amt;
         Disc = Des;
@@ -33,11 +42,14 @@ public class Ticket { // Database infomration storage
     public void setStatus(String status){this.status = status;}
     public String getOwner() {return Owner;}
     public void setOwner(String owner) {Owner = owner;}
+    public int getId() {return id;}
+    public void setId(int id) {this.id = id;}
+
     public String display() {
         String out = "";
         out += "Amount: " + getReimburstment();
         out +="\n" + getDisc();
-        if(Owner != ""){
+        if(!Objects.equals(Owner, "")){
             out += "\nOwner: " + getOwner();
         }
         switch (status) {
