@@ -1,6 +1,1 @@
-2022-10-10 01:45:09,127 ERROR com.revature.Repos.databaseHandler [JettyServerThreadPool-12] ERROR: syntax error at or near "$1"
-  Position: 84
-2022-10-10 01:48:13,319 ERROR com.revature.Repos.databaseHandler [JettyServerThreadPool-18] ERROR: syntax error at or near "$1"
-  Position: 84
-2022-10-10 08:52:04,548 ERROR com.revature.Repos.databaseHandler [JettyServerThreadPool-12] ERROR: column "pen" does not exist
-  Position: 59
+2022-10-11 09:32:55,471 ERROR com.revature.Repos.databaseHandler [main] The url cannot be null

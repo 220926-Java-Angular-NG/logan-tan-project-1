@@ -17,7 +17,7 @@ public class ConnectionManager { //manages the connection to the database, thoug
     private static Properties loadProp(){
         Properties properties = new Properties();
         try {
-            FileInputStream fileInputStream = new FileInputStream("TIcketManager/src/main/resources/dbConfig.properties");
+            FileInputStream fileInputStream = new FileInputStream("TicketManager/src/main/resources/dbConfig.properties");
             properties.load(fileInputStream);
         } catch (IOException e){
             System.out.println(e.getMessage());

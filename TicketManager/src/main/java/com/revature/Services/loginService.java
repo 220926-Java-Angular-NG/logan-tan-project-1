@@ -12,6 +12,12 @@ public class loginService {
         app.post("/register",lnh.Registration);
         app.post("/login",lnh.login);
         app.post("<path>/logout", lnh.logout);
+        app.get("/body_not_found",context -> context.result("body_not_found"));
+        app.get("/Illegal_Characters_Used_In_Body",context -> context.result("Illegal_Characters_Used_In_Body"));
+        app.get("/Illegal_Argument_Length_In_Body",context -> context.result("Illegal_Argument_Length_In_Body"));
+
+
+
         app.get("/TeaPot",context -> { //Ignore the dummy test
             context.result("TeaPot").status(418);
 

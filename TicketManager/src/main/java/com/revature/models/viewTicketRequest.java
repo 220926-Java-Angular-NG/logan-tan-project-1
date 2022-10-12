@@ -14,3 +14,4 @@ public class viewTicketRequest {
 
     public void setPermission(String permission) {this.permission = permission;}
 }
+

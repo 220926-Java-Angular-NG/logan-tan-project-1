@@ -6,13 +6,10 @@ import com.revature.models.User;
 import com.revature.models.login;
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
 public class loginHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(employeeHandler.class);
     databaseHandler db = new databaseHandler();
     List<userService> scessions = new ArrayList<>();
     List<String> loggedOn = new ArrayList<>();
@@ -21,21 +18,51 @@ public class loginHandler {
     public Handler LandingPage = context -> context.result("Login Screen");
     public Handler Registration = context -> {
         User user = context.bodyAsClass(User.class);
-        if(user.getAcctype().equals("EMP")){
-            if(db.registerEMP(user.getfirstName(),user.getLastName(),user.getUserName(),user.getPassword()))
-            {
-                context.result("Account created").status(200);
-            }else{
-                context.result("Process Failure").status(400);
-            }
-        } else{
-            if(db.registerMAN(user.getfirstName(),user.getLastName(),user.getUserName(),user.getPassword())){
-                context.result("Account created").status(200);
-            }else{
-                context.result("Process Failure").status(400);
-            }
+        boolean UsableStrings = true;
+        String userNameTemp = "";
+        String passwordTemp = "";
+        String firstNameTemp = "";
+        String lastnameTemp = "";
+        if(user == null){
+            UsableStrings = false;
+            context.redirect("/body_not_found");
         }
-        context.redirect("/login");
+        if(UsableStrings){
+            userNameTemp = CleanString(user.getUserName());
+            passwordTemp = CleanString(user.getPassword());
+            firstNameTemp = CleanString(user.getfirstName());
+            lastnameTemp = CleanString(user.getLastName());
+            if(!(user.getUserName().equals(userNameTemp)&&user.getPassword().equals(passwordTemp)&&
+                    user.getfirstName().equals(firstNameTemp)&&user.getLastName().equals(lastnameTemp))){
+                    context.redirect("/Illegal_Characters_Used_In_Body");
+                    UsableStrings = false;
+
+            }
+            //the lines above check to see if there were any illegal characters in any of the passed strings
+        }
+        if(UsableStrings){
+            if(!(userNameTemp.length() >= 2 && passwordTemp.length() >= 2 && firstNameTemp.length() >0 && lastnameTemp.length() >0)){
+                context.redirect("/Illegal_Argument_Length_In_Body");
+                UsableStrings = false;
+            }
+            // checks for username and password length
+        }
+        if(UsableStrings) {
+            if (user.getAcctype().equals("EMP")) {
+                if (db.registerEMP(user.getfirstName(), user.getLastName(), user.getUserName(), user.getPassword())) {
+                    context.result("Account created").status(200);
+                } else {
+                    context.result("Process Failure").status(400);
+                }
+            } else {
+                if (db.registerMAN(user.getfirstName(), user.getLastName(), user.getUserName(), user.getPassword())) {
+                    context.result("Account created").status(200);
+                } else {
+                    context.result("Process Failure").status(400);
+                }
+            }
+            context.redirect("/login");
+        }
     };
     public Handler login = context -> {
         login login = context.bodyAsClass(login.class);
@@ -90,4 +117,8 @@ public class loginHandler {
             context.result("Logout Failure");
         }
     };
+
+    public String CleanString(String input){
+        return input.replaceAll("[^a-zA-Z0-9-]","");
+    }
 }
