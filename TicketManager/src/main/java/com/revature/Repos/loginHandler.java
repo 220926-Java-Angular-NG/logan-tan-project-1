@@ -62,7 +62,7 @@ public class loginHandler {
         userService temp = null;
         User user = db.login(login.getUserName(), login.getPassword());
         if(user != null  && user.getPassword().equals(login.getPassword())) {
-            String path = "/"+user.getAcctype()+"/"+user.getLastName()+"/"+ user.getUID();
+            String path = "/"+user.getAcctype()+"/"+user.getUserName()+"/"+ user.getUID();
             if(!loggedOn.contains(user.getUserName())){
                 context.redirect(path);
                 if(user.getAcctype().equals("EMP")){
@@ -116,7 +116,7 @@ public class loginHandler {
         User target = db.findUser(context.pathParam("target"));
         contine = !(target == null);
         if(contine) {
-            String pathT = "/" + target.getAcctype() + "/" + target.getLastName() + "/" + target.getUID();
+            String pathT = "/" + target.getAcctype() + "/" + target.getUserName() + "/" + target.getUID();
             User Auth = db.findUser(context.pathParam("authorizer"));
             contine = !(Auth == null);
             if(contine) {
@@ -132,7 +132,7 @@ public class loginHandler {
                 for (userService scession : scessions) {
                     if (scession.getPath().equals(pathA)) { // find the Authenticator
                         if(scession.isLoggedin()){ // see if Authenticator is logged in
-                            db.updateUser(target.getUID());
+                            db.promoteUser(target.getUID());
                             context.result("Promoted");
                         } else{
                             context.result("Authenticator is not logged in");
@@ -150,7 +150,7 @@ public class loginHandler {
 
     };
 
-    public String CleanString(String input){
+    public static String CleanString(String input){
         return input.replaceAll("[^a-zA-Z0-9-]","");
     }
 }

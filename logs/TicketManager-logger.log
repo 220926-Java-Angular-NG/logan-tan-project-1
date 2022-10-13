@@ -3,3 +3,7 @@
 2022-10-13 09:23:45,764 ERROR com.revature.Repos.databaseHandler [JettyServerThreadPool-17] No value specified for parameter 3.
 2022-10-13 09:23:54,318 ERROR com.revature.Repos.databaseHandler [JettyServerThreadPool-17] No value specified for parameter 3.
 2022-10-13 11:34:36,670 ERROR com.revature.Repos.databaseHandler [JettyServerThreadPool-18] Large Objects may not be used in auto-commit mode.
+2022-10-13 13:55:17,629 ERROR com.revature.Repos.databaseHandler [JettyServerThreadPool-18] ERROR: syntax error at or near "ast"
+  Position: 68
+2022-10-13 14:06:56,606 ERROR com.revature.Repos.databaseHandler [JettyServerThreadPool-18] ERROR: value too long for type character varying(40)
+2022-10-13 14:08:03,994 ERROR com.revature.Repos.databaseHandler [JettyServerThreadPool-18] ERROR: value too long for type character varying(40)

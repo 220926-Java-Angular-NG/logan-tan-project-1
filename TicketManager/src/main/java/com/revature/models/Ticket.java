@@ -16,27 +16,6 @@ public class Ticket {
     byte [] bin = null;
     public Ticket() {
     } // empty constructor for javalin to use
-
-    public Ticket(float amt, String Des) {
-        Reimburstment = amt;
-        Disc = Des;
-    }
-    public Ticket(float amt, String Des,String status,String Owner, int id) {
-        setDisc(Des);
-        setOwner(Owner);
-        setReimburstment(amt);
-        setStatus(status);
-        setId(id);
-    }
-    public Ticket(float amt, String Des,String status,String Owner, int id,String code) {
-        setDisc(Des);
-        setOwner(Owner);
-        setReimburstment(amt);
-        setStatus(status);
-        setId(id);
-        this.type = RType.getType(code);
-    }
-
     public Ticket(float amt, String Des,String status,String Owner, int id,String code, byte[] bin) {
         setDisc(Des);
         setOwner(Owner);

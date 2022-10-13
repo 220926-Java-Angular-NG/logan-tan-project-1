@@ -88,10 +88,13 @@ public class employeeHandler{
     };
     public Handler getTicketImage = context -> {
         tickets = db.viewTickets(context.pathParam("tid"),String.valueOf(user.getUID()),"%","%",false);
-        if(tickets.get(0).getBin() != null){
-            context.result(tickets.get(0).getBin()).res.setContentType("image/PNG");
+        if(tickets.size() > 0) {
+            if (tickets.get(0).getBin() != null) {
+                context.result(tickets.get(0).getBin()).res.setContentType("image/PNG");
+                tickets = null;
+            }
+            context.result("No Image");
         }
-        context.result("No Image");
     };
 
     public Handler GetTickets = context -> {
@@ -103,6 +106,49 @@ public class employeeHandler{
             context.result("Not logged in").status(404);
         }
     };
+
+
+    public Handler addpfp = context -> {
+        if(loggedin){
+            byte[] pfp = context.bodyAsBytes();
+            db.addUserIMG(user.getUID(),pfp);
+            context.result("Img added");
+        }else{
+            context.result("Not logged in").status(404);
+        }
+    };
+
+    public Handler viewpfp = context -> {
+        User iml = db.findUser(user.getUserName());
+        if(iml.getPfp() != null){
+            context.result(iml.getPfp()).res.setContentType("image/PNG");
+        }else{
+            context.result("no image");
+        }
+    };
+    public Handler editaccount = context -> {
+        if(loggedin){
+            boolean UsableStrings = true;
+            String firstNameTemp = "";
+            String lastnameTemp = "";
+            User request = context.bodyAsClass(User.class);
+            request.setUID(user.getUID());
+            firstNameTemp = loginHandler.CleanString(request.getfirstName());
+            lastnameTemp = loginHandler.CleanString(request.getLastName());
+            if(!(request.getfirstName().equals(firstNameTemp)&&request.getLastName().equals(lastnameTemp))){
+                context.redirect("/Illegal_Characters_Used_In_Body");
+                UsableStrings = false;
+
+            }
+            //the lines above check to see if there were any illegal characters in any of the passed strings
+            if(UsableStrings) {
+                db.customizeUser(request);
+                context.result("updated");
+            }
+        }
+    };
+
+
     public List<Ticket> ViewTickets(String who, String status, String type) {
         List<Ticket> tickets = null;
         try{
@@ -120,9 +166,9 @@ public class employeeHandler{
             LOGGER.error(e.getMessage());
         }
     }
-    public void Logout() {
 
-    }
+
+
     public String getPath() {
         return path;
     }

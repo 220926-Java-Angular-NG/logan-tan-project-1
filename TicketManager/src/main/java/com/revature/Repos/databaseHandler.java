@@ -5,9 +5,6 @@ import com.revature.models.Ticket;
 import com.revature.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.sql.rowset.serial.SerialBlob;
-import javax.sql.rowset.serial.SerialException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +18,7 @@ public class databaseHandler { // handels database quries
     public databaseHandler() {
         try {
             connection = ConnectionManager.getConn();
-            act = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Accounts (firstName VARCHAR(40) not null, lastName VARCHAR(40) not null,Password VARCHAR(40) not null, userName VARCHAR(40) not null unique,EID SERIAL PRIMARY KEY, accType VARCHAR(3) DEFAULT 'EMP')");
+            act = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Accounts (firstName VARCHAR(40) not null, lastName VARCHAR(40) not null,Password VARCHAR(40) not null, userName VARCHAR(40) not null unique, pfp bytea, email VARCHAR(200), address VARCHAR(200),EID SERIAL PRIMARY KEY, accType VARCHAR(3) DEFAULT 'EMP')");
             act.execute();
             act = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Tickets (Amount VARCHAR(12), Description VARCHAR(140), Status VARCHAR(3) DEFAULT 'PEN', Type VARCHAR(3) DEFAULT 'ECT', eid INT not null, img bytea,TID Serial PRIMARY KEY, CONSTRAINT fk_Account FOREIGN KEY (EID) REFERENCES Accounts (EID))");
             act.execute();
@@ -70,7 +67,7 @@ public class databaseHandler { // handels database quries
         } else{
             String userPassword = res.getString("Password");
             if(userPassword.equals(Password)){ //check that passwords match
-                return new User(res.getString("firstname"),res.getString("lastname"),res.getString("username"),res.getString("password"),res.getString("acctype"),res.getInt("eid"));
+                return new User(res.getString("firstname"),res.getString("lastname"),res.getString("username"),res.getString("password"),res.getString("acctype"),res.getInt("eid"),res.getBytes("pfp"));
             } else{
                 return null; // Password didn't match
             }
@@ -88,11 +85,11 @@ public class databaseHandler { // handels database quries
         if(!res.next()){
             return null; // There is no user with this userName
         } else {
-            return new User(res.getString("firstname"),res.getString("lastname"),res.getString("username"),"",res.getString("acctype"),res.getInt("eid"));
+            return new User(res.getString("firstname"),res.getString("lastname"),res.getString("username"),"",res.getString("acctype"),res.getInt("eid"),res.getBytes("pfp"));
         }
     }
 
-    public void updateUser(int eid) throws SQLException{
+    public void promoteUser(int eid) {
         Query = "update accounts SET acctype ='MAN' where eid = ? and acctype = 'EMP'";
         try{
             act = connection.prepareStatement(Query);
@@ -102,6 +99,47 @@ public class databaseHandler { // handels database quries
             LOGGER.error(e.getMessage());
         }
     }
+
+    public void customizeUser(User user) {
+        Query = "update accounts SET firstname = ?, lastname = ?, email = ?, address = ? where eid = ?";
+        try{
+            act = connection.prepareStatement(Query);
+            act.setString(1,user.getfirstName());
+            act.setString(2,user.getLastName());
+            act.setString(3,user.getEmail());
+            act.setString(4,user.getAddress());
+            act.setInt(5,user.getUID());
+            act.execute();
+        }catch (SQLException e){
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    public void addUserIMG(int eid,byte[] bin) {
+        Query = "update accounts SET pfp =? where eid = ?";
+        try{
+            act = connection.prepareStatement(Query);
+            act.setBytes(1,bin);
+            act.setInt(2,eid);
+            act.execute();
+        }catch (SQLException e){
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //Ticket management possibly could be refactored into a different class
     public void addTicket(Ticket ticket, int eid) throws SQLException {
