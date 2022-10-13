@@ -141,7 +141,7 @@ public class managerHandler{
     public List<Ticket> ViewTickets(String who, String type,String status) {
         List<Ticket> tickets = null;
         try{
-            tickets = db.viewTickets(who,status,type, true);
+            tickets = db.viewTickets("%",who,status,type, true);
         }catch (SQLException e){
             LOGGER.error(e.getMessage());
         }
@@ -150,7 +150,7 @@ public class managerHandler{
     public List<Ticket> ViewMyTickets(String who, String type,String status) {
         List<Ticket> tickets = null;
         try{
-            tickets = db.viewTickets(who,status, type,false);
+            tickets = db.viewTickets("%",who,status, type,false);
         }catch (SQLException e){
             LOGGER.error(e.getMessage());
         }

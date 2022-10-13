@@ -58,10 +58,15 @@ public class employeeHandler{
 
     public Handler uploadimg = context -> {
         if(loggedin){
+            int tid = 0;
             byte[] bin= context.bodyAsBytes();
-            if(bin!= null) {
-
+            try {
+                tid = Integer.parseInt(context.pathParam("tid"));
+            } catch (NumberFormatException e){
+                LOGGER.error(e.getMessage());
             }
+            db.addRecitTicket(user.getUID(),tid,bin);
+            context.result("Action called");
         }else{
             context.result("Not logged in").status(404);
         }
@@ -74,13 +79,19 @@ public class employeeHandler{
                 for (Ticket ticket : tickets) {
                     TicketRaw.append(ticket.display()).append("\n\n");
                 }
-                context.result(String.valueOf(TicketRaw));
                 context.json(tickets);
                 tickets = null;
 
             }}else{
             context.result("Not logged in").status(404);
         }
+    };
+    public Handler getTicketImage = context -> {
+        tickets = db.viewTickets(context.pathParam("tid"),String.valueOf(user.getUID()),"%","%",false);
+        if(tickets.get(0).getBin() != null){
+            context.result(tickets.get(0).getBin()).res.setContentType("image/PNG");
+        }
+        context.result("No Image");
     };
 
     public Handler GetTickets = context -> {
@@ -95,7 +106,7 @@ public class employeeHandler{
     public List<Ticket> ViewTickets(String who, String status, String type) {
         List<Ticket> tickets = null;
         try{
-        tickets = db.viewTickets(who,status,type,false);
+        tickets = db.viewTickets("%",who,status,type,false);
         }catch (SQLException e){
             LOGGER.error(e.getMessage());
         }

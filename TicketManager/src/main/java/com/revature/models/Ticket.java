@@ -13,6 +13,7 @@ public class Ticket {
     String Owner = "";
     int id;
     RType type = ECT;
+    byte [] bin = null;
     public Ticket() {
     } // empty constructor for javalin to use
 
@@ -36,6 +37,16 @@ public class Ticket {
         this.type = RType.getType(code);
     }
 
+    public Ticket(float amt, String Des,String status,String Owner, int id,String code, byte[] bin) {
+        setDisc(Des);
+        setOwner(Owner);
+        setReimburstment(amt);
+        setStatus(status);
+        setId(id);
+        this.type = RType.getType(code);
+        this.bin = bin;
+    }
+
     public Ticket(float amt, String Des,String status) {
         Reimburstment = amt;
         Disc = Des;
@@ -53,6 +64,10 @@ public class Ticket {
     public void setId(int id) {this.id = id;}
     public RType getType(){return type;}
     public void setType(String code){this.type = RType.getType(code);}
+    public void setBin(byte[] bin){
+        this.bin = bin;
+    }
+    public byte[] getBin(){return bin;};
 
     public String display() {
         String out = "";

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,33 +118,35 @@ public class databaseHandler { // handels database quries
             LOGGER.error(e.getMessage());
         }
     }
-    public void addRecitTicket(int eid, byte[] bin) throws SQLException{
+    public void addRecitTicket(int eid, int tid,byte[] bin){
         try{
-        Blob blob = new SerialBlob(bin);
-        Query = "update tickets SET img =? where tid = ?";
+
+        Query = "update tickets SET img =? where tid = ? and eid = ?";
         act = connection.prepareStatement(Query);
-        act.setBlob(1,blob);
-        act.setInt(2,eid);
+        act.setBytes(1,bin);
+        act.setInt(3,eid);
+        act.setInt(2,tid);
         act.execute();
         } catch (SQLException e){
             LOGGER.error(e.getMessage());
         }
     }
-    public List<Ticket> viewTickets(String who, String status, String type,boolean manager) throws SQLException {
+    public List<Ticket> viewTickets(String tid,String who, String status, String type,boolean manager) throws SQLException {
         List<Ticket> tickets = new ArrayList<>();
         try{
             if(manager){ // if a manager is simply reviewing tickets they should not see their own
-                Query = "select * from tickets t join accounts a on a.eid = t.eid where cast(t.eid as text) not like ? and t.status like ? and t.type like ?";
+                Query = "select * from tickets t join accounts a on a.eid = t.eid where cast(t.eid as text) not like ? and t.status like ? and t.type like ? and cast(t.tid as text) like ?";
             }else{
-                Query = "select * from tickets t join accounts a on a.eid = t.eid where cast(t.eid as text) like ? and t.status like ? and t.type like ?";
+                Query = "select * from tickets t join accounts a on a.eid = t.eid where cast(t.eid as text) like ? and t.status like ? and t.type like ? and cast(t.tid as text) like ?";
             }
         act = connection.prepareStatement(Query);
         act.setString(1,who);
         act.setString(2,status);
         act.setString(3,type);
+        act.setString(4,tid);
         ResultSet rs = act.executeQuery();
         while(rs.next()){
-            tickets.add(new Ticket(Float.parseFloat(rs.getString("amount")),rs.getString("description"),rs.getString("status"), rs.getString("firstname")+" "+rs.getString("lastname"), rs.getInt("tid"),rs.getString("type")));
+            tickets.add(new Ticket(Float.parseFloat(rs.getString("amount")),rs.getString("description"),rs.getString("status"), rs.getString("firstname")+" "+rs.getString("lastname"), rs.getInt("tid"),rs.getString("type"),rs.getBytes("img")));
         }
         }catch(SQLException e){
             LOGGER.error(e.getMessage());

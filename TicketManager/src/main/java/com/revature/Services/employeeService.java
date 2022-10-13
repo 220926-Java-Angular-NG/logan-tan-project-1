@@ -28,6 +28,8 @@ public class employeeService implements userService {
         app.post(path+"/AddTicket", emh.AddTicket);
         app.post(path+"/ViewTicket", emh.GetTickets);
         app.get(path+"/ViewTicket",emh.ViewTickets);
+        app.patch(path+"/{tid}"+"/uploadimg",emh.uploadimg);
+        app.get(path+"/TicketImage/<tid>", emh.getTicketImage);
     }
     public String getPath() {
         return path;
