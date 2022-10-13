@@ -15,6 +15,8 @@ public class loginService {
         app.get("/body_not_found",context -> context.result("body_not_found"));
         app.get("/Illegal_Characters_Used_In_Body",context -> context.result("Illegal_Characters_Used_In_Body"));
         app.get("/Illegal_Argument_Length_In_Body",context -> context.result("Illegal_Argument_Length_In_Body"));
+        app.get("/User_Already_Exists",context -> context.result("User_Already_Exists"));
+        app.patch("/Promote/{target}/{authorizer}", lnh.Promote);
 
 
 

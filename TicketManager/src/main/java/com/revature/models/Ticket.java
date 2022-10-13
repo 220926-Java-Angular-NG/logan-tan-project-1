@@ -1,26 +1,24 @@
 package com.revature.models;
 
+import com.revature.Utils.RType;
+
 import java.util.Objects;
 
-public class Ticket { // Database infomration storage
+import static com.revature.Utils.RType.*;
+
+public class Ticket {
     float Reimburstment = 0;
     String Disc = "";
     String status = "PEN"; // PEN = pending, ACC = accepted, REJ = rejected
     String Owner = "";
     int id;
-
+    RType type = ECT;
     public Ticket() {
     } // empty constructor for javalin to use
 
     public Ticket(float amt, String Des) {
         Reimburstment = amt;
         Disc = Des;
-    }
-    public Ticket(float amt, String Des,String status,String Owner) {
-        setDisc(Des);
-        setOwner(Owner);
-        setReimburstment(amt);
-        setStatus(status);
     }
     public Ticket(float amt, String Des,String status,String Owner, int id) {
         setDisc(Des);
@@ -29,6 +27,15 @@ public class Ticket { // Database infomration storage
         setStatus(status);
         setId(id);
     }
+    public Ticket(float amt, String Des,String status,String Owner, int id,String code) {
+        setDisc(Des);
+        setOwner(Owner);
+        setReimburstment(amt);
+        setStatus(status);
+        setId(id);
+        this.type = RType.getType(code);
+    }
+
     public Ticket(float amt, String Des,String status) {
         Reimburstment = amt;
         Disc = Des;
@@ -44,6 +51,8 @@ public class Ticket { // Database infomration storage
     public void setOwner(String owner) {Owner = owner;}
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
+    public RType getType(){return type;}
+    public void setType(String code){this.type = RType.getType(code);}
 
     public String display() {
         String out = "";
@@ -67,6 +76,8 @@ public class Ticket { // Database infomration storage
                 break;
             }
         }
+        out +="\nReimburstment Type:" + getType();
+        out +="\nCompany pays:" + getReimburstment() * getType().getPercentage();
         return out;
     }
 }

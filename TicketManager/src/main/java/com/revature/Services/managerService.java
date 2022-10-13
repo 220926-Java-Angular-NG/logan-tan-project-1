@@ -38,4 +38,9 @@ public class managerService implements userService {
     public boolean isLoggedin() {
         return state;
     }
+
+    @Override
+    public User getUser() {
+        return user;
+    }
 }

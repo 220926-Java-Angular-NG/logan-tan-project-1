@@ -56,6 +56,17 @@ public class employeeHandler{
         }
     };
 
+    public Handler uploadimg = context -> {
+        if(loggedin){
+            byte[] bin= context.bodyAsBytes();
+            if(bin!= null) {
+
+            }
+        }else{
+            context.result("Not logged in").status(404);
+        }
+    };
+
     public Handler ViewTickets = context -> {
         if(loggedin){
             StringBuilder TicketRaw = new StringBuilder();
@@ -75,16 +86,16 @@ public class employeeHandler{
     public Handler GetTickets = context -> {
         if(loggedin){
             viewTicketRequest request = context.bodyAsClass(viewTicketRequest.class);
-            tickets = ViewTickets(String.valueOf(user.getUID()),request.getStatus());
+            tickets = ViewTickets(String.valueOf(user.getUID()), request.getStatus(), request.getType());
             context.redirect(path+"/ViewTicket");
         }else{
             context.result("Not logged in").status(404);
         }
     };
-    public List<Ticket> ViewTickets(String who, String status) {
+    public List<Ticket> ViewTickets(String who, String status, String type) {
         List<Ticket> tickets = null;
         try{
-        tickets = db.viewTickets(who,status,false);
+        tickets = db.viewTickets(who,status,type,false);
         }catch (SQLException e){
             LOGGER.error(e.getMessage());
         }
