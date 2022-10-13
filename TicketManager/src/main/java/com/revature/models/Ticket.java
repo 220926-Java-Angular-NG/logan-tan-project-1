@@ -3,8 +3,8 @@ package com.revature.models;
 import java.util.Objects;
 
 public class Ticket { // Database infomration storage
-    float Reimburstment;
-    String Disc;
+    float Reimburstment = 0;
+    String Disc = "";
     String status = "PEN"; // PEN = pending, ACC = accepted, REJ = rejected
     String Owner = "";
     int id;

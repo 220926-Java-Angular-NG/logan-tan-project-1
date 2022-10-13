@@ -22,7 +22,7 @@ public class managerService implements userService {
         app.post(path+"/ViewMyTicket", mah.GetMyTickets);
         app.post(path+"/ViewTicket", mah.GetTickets);
         app.get(path+"/ViewTicket",mah.ViewTickets);
-        app.get(path+"/Tickets/<state>/{tid}",mah.AccRejTickets);
+        app.patch(path+"/Tickets/<state>/{tid}",mah.AccRejTickets);
     }
     @Override
     public String getPath() {

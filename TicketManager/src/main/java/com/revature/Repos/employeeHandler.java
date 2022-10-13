@@ -37,7 +37,20 @@ public class employeeHandler{
     public Handler AddTicket = context -> {
         if(loggedin){
             Ticket ticket = context.bodyAsClass(Ticket.class);
-            AddTicket(ticket);
+            if(ticket != null) {
+                if(ticket.getReimburstment() > 0) {
+                    if(ticket.getDisc().length() > 0) {
+                        AddTicket(ticket);
+                        context.result("Ticket Added").status(200);
+                    } else{
+                        context.result("You need a description").status(200);
+                    }
+                } else{
+                    context.result("Improper reimburstment amount").status(400);
+                }
+            } else{
+                context.result("could not read body").status(400);
+            }
         }else{
             context.result("Not logged in").status(404);
         }

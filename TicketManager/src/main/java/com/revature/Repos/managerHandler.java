@@ -98,7 +98,6 @@ public class managerHandler{
         }else{
             context.result("Not logged in").status(404);
         }
-        context.result("Did a thing");
     };
     public String getPath() {
         return path;
