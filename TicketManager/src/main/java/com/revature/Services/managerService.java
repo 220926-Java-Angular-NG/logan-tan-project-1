@@ -23,6 +23,11 @@ public class managerService implements userService {
         app.post(path+"/ViewTicket", mah.GetTickets);
         app.get(path+"/ViewTicket",mah.ViewTickets);
         app.patch(path+"/Tickets/<state>/{tid}",mah.AccRejTickets);
+        app.patch(path+"/{tid}"+"/uploadimg",mah.uploadimg);
+        app.get(path+"/TicketImage/{tid}", mah.getTicketImage);
+        app.patch(path+"/addPFP",mah.addpfp);
+        app.patch(path+"/editAccount",mah.editaccount);
+        app.get(path+"/profile", mah.viewpfp);
     }
     @Override
     public String getPath() {
